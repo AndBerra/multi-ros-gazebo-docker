@@ -16,9 +16,7 @@ RUN sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb
     wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 RUN apt-get update && apt-get install -y \
     gazebo${GAZEBO_VERSION} \
-    libgazebo${GAZEBO_VERSION}-dev \
-    ros-$ROS_DISTRO-gazebo-ros-pkgs \
-    ros-$ROS_DISTRO-gazebo-ros-control
+    libgazebo${GAZEBO_VERSION}-dev 
 
 # setup ros 
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc 
@@ -34,8 +32,8 @@ WORKDIR ${HOME}/catkin_ws
 # INSTALLING DEPENDENCIES
 FROM base as dependencies
 RUN apt-get update && \
-    apt-get install -y apt-utils git nano \              
-    && rm -rf /var/lib/apt/lists/*
+    apt-get install -y apt-utils git nano ros-$ROS_DISTRO-gazebo-ros-pkgs \
+    && rm -rf /var/lib/apt/lists/* 
 
 # --------------------------------------------------------------------------------
 # NVIDIA SETTINGS
