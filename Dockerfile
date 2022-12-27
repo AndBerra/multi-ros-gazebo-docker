@@ -8,15 +8,13 @@ ENV DEBIAN_FRONTED=noninteractive
 
 
 # install gazebo
+ARG GAZEBO_MAJOR_VERSION
 RUN apt-get update && \
     apt-get install -y wget 
-
-ARG GAZEBO_VERSION
-RUN sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list' && \
-    wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
-RUN apt-get update && apt-get install -y \
-    gazebo${GAZEBO_VERSION} \
-    libgazebo${GAZEBO_VERSION}-dev 
+RUN wget https://raw.githubusercontent.com/ignition-tooling/release-tools/master/jenkins-scripts/lib/dependencies_archive.sh \
+    -O /tmp/dependencies.sh 
+RUN /bin/bash -c '. /tmp/dependencies.sh'
+RUN echo $BASE_DEPENDENCIES $GAZEBO_BASE_DEPENDENCIES | tr -d '\\' | xargs sudo apt-get -y install
 
 # setup ros 
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc 

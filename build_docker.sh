@@ -10,7 +10,7 @@ echo "gazebo version -> $my_gazebo_version"
 echo "----------------------------------------"
 
 DOCKER_BUILDKIT=1 docker build  --build-arg ROS_VERSION="$my_ros_version"\
-                                --build-arg GAZEBO_VERSION=$my_gazebo_version\
+                                --build-arg GAZEBO_MAJOR_VERSION=$my_gazebo_version\
                                 -t ros-$my_ros_version-gazebo$my_gazebo_version\
                                 .
 
