@@ -29,9 +29,12 @@ WORKDIR ${HOME}/catkin_ws
 # --------------------------------------------------------------------------------
 # INSTALLING DEPENDENCIES
 FROM base as dependencies
-RUN apt-get update && \
-    apt-get install -y apt-utils git nano ros-$ROS_DISTRO-gazebo-ros-pkgs \
-    && rm -rf /var/lib/apt/lists/* 
+
+RUN rm -rf /var/lib/apt/lists/*
+
+COPY requirements.sh /scripts/
+RUN chmod +x /scripts/requirements.sh
+RUN bash /scripts/requirements.sh 
 
 # --------------------------------------------------------------------------------
 # NVIDIA SETTINGS
