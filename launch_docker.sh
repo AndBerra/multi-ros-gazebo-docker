@@ -9,21 +9,11 @@ img_name="$2"
 # abs path to the src folder desired in the volume 
 path_src="$3"
 
+
 if [ "$#" != "3" ];
     then
     echo "<container_name> <image_name> <abs_path_to_src>"
     exit 1
-fi
-
-
-# checking container already ready
-if docker container ls -a | grep -q "aircontact_simulator"; then
-    echo "Container called already present!"
-    if !(docker container ls  | grep -q "uav_sim"); then # is container started?
-        docker start $ctr_name 
-    fi
-    
-    docker exec -it $ctr_name bash
 fi
 
 echo "----------------------------"
@@ -48,6 +38,10 @@ docker run --gpus all -it \
 -e LOCAL_USER_ID=`id -u $USER` \
 -e LOCAL_GROUP_ID=`id -g $USER` \
 -e LOCAL_GROUP_NAME=`id -gn $USER` \
+--device /dev/snd \
+    -e PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native \
+	-v ${XDG_RUNTIME_DIR}/pulse/native:${XDG_RUNTIME_DIR}/pulse/native \
+	--group-add $(getent group audio | cut -d: -f3) \
 --name=$ctr_name $img_name
 
 xhost -local:root
