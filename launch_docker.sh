@@ -16,6 +16,16 @@ if [ "$#" != "3" ];
     exit 1
 fi
 
+# checking container already ready
+if docker container ls -a | grep -q $ctr_name; then
+    echo "Container called already present!"
+    if !(docker container ls  | grep -q $ctr_name); then # is container started?
+        docker start $ctr_name 
+    fi
+    
+    docker exec -it $ctr_name bash
+fi
+
 echo "----------------------------"
 echo "running container: $ctr_name"
 echo "generated from image: $img_name "
